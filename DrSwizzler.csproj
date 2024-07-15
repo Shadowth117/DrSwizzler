@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Authors>Shadowth117</Authors>
     <Description>A library for deswizzling and swizzling texture data for various game consoles.</Description>
     <PackageProjectUrl>https://github.com/Shadowth117/DrSwizzler</PackageProjectUrl>
