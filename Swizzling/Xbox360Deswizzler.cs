@@ -42,32 +42,26 @@ namespace DrSwizzler.Swizzling
                 case DXGIFormat.BC1UNORM:
                 case DXGIFormat.BC2UNORM:
                 case DXGIFormat.BC3UNORM:
+                case DXGIFormat.BC4UNORM:
+                case DXGIFormat.BC5UNORM:
                     X360AlignX = 128;
                     X360AlignY = 128;
                     break;
             }
         }
 
-        public static byte[] Deswizzle(byte[] data, int width, int height, int numMipMaps, DXGIFormat pixelFormat, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
+        public static byte[] Deswizzle(byte[] data, int width, int height, DXGIFormat pixelFormat, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
         {
             GetXbox360Ailgn(pixelFormat, out int X360AlignX, out int X360AlignY);
-            int curAddr = 0;
-            for (int i = 0; i < numMipMaps; i++)
-            {
-                int width1 = Align(width, X360AlignX);
-                int height1 = Align(height, X360AlignY);
+            int width1 = Align(width, X360AlignX);
+            int height1 = Align(height, X360AlignY);
 
-                int size = (width1 / pixelBlockSize) * (height1 / pixelBlockSize) * sourceBytesPerPixelSet;
+            int size = (width1 / pixelBlockSize) * (height1 / pixelBlockSize) * sourceBytesPerPixelSet;
 
-                byte[] mipMapData = new byte[size];
-                Array.Copy(data, curAddr, mipMapData, 0, size);
-                mipMapData = UntileCompressedX360Texture(mipMapData, width1, width, height1, pixelBlockSize, pixelBlockSize, sourceBytesPerPixelSet);
-                Array.Copy(mipMapData, 0, data, curAddr, size);
-
-                curAddr += size;
-                width /= 2;
-                height /= 2;
-            }
+            byte[] mipMapData = new byte[size];
+            Array.Copy(data, 0, mipMapData, 0, size);
+            mipMapData = UntileCompressedX360Texture(mipMapData, width1, width, height1, pixelBlockSize, pixelBlockSize, sourceBytesPerPixelSet);
+            Array.Copy(mipMapData, 0, data, 0, size);
 
             return data;
         }
