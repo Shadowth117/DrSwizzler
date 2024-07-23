@@ -285,6 +285,10 @@ namespace DrSwizzler
         /// </summary>
         public static byte[] ExpandArray(byte[] array, int newLength)
         {
+            if (newLength < array.Length)
+            {
+                return array;
+            }
             byte[] newArray = new byte[newLength];
             Array.Copy(array, 0, newArray, 0, array.Length);
 
