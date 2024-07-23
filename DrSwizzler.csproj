@@ -5,7 +5,7 @@
     <Authors>Shadowth117</Authors>
     <Description>A library for deswizzling and swizzling texture data for various game consoles.</Description>
     <PackageProjectUrl>https://github.com/Shadowth117/DrSwizzler</PackageProjectUrl>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
     <Version>$(AssemblyVersion)</Version>
   </PropertyGroup>
 

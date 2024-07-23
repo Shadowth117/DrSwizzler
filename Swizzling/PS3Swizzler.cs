@@ -5,7 +5,7 @@ namespace DrSwizzler.Swizzling
 {
     internal class PS3Swizzler
     {
-        public static byte[] PS3Swizzle(byte[] deswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
+        public static byte[] PS3Swizzle(byte[] deswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp, int minBufferSize = 0)
         {
             //If it's not long enough, return as is
             if (sourceBytesPerPixelSet >= deswizzledData.Length)
@@ -14,6 +14,10 @@ namespace DrSwizzler.Swizzling
             }
 
             int calculatedBufferSize = (formatbpp * width * height) / 8;
+            if (minBufferSize > calculatedBufferSize)
+            {
+                calculatedBufferSize = minBufferSize;
+            }
             byte[] outBuffer = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
             byte[] tempBuffer = new byte[sourceBytesPerPixelSet];
             int sy = height / pixelBlockSize;
