@@ -14,7 +14,7 @@ namespace DrSwizzler.Swizzling
             }
 
             int calculatedBufferSize = (formatbpp * width * height) / 8;
-            byte[] outBuffer = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
+            byte[] swizzledData = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
             byte[] tempBuffer = new byte[sourceBytesPerPixelSet];
             int sy = height / pixelBlockSize;
             int sx = width / pixelBlockSize;
