@@ -52,6 +52,12 @@ namespace DrSwizzler.Swizzling
 
         public static byte[] Deswizzle(byte[] data, int width, int height, DXGIFormat pixelFormat, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
         {
+            //If it's not long enough, return as is
+            if (sourceBytesPerPixelSet >= data.Length)
+            {
+                return data;
+            }
+
             GetXbox360Ailgn(pixelFormat, out int X360AlignX, out int X360AlignY);
             int width1 = Align(width, X360AlignX);
             int height1 = Align(height, X360AlignY);

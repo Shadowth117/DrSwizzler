@@ -7,7 +7,14 @@ namespace DrSwizzler.Swizzling
     {
         public static byte[] PS4Swizzle(byte[] deswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
         {
-            byte[] outBuffer = new byte[(formatbpp * width * height) / 8];
+            //If it's not long enough, return as is
+            if (sourceBytesPerPixelSet >= deswizzledData.Length)
+            {
+                return deswizzledData;
+            }
+
+            int calculatedBufferSize = (formatbpp * width * height) / 8;
+            byte[] outBuffer = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
             byte[] tempBuffer = new byte[sourceBytesPerPixelSet];
             int sy = height / pixelBlockSize;
             int sx = width / pixelBlockSize;
@@ -31,8 +38,11 @@ namespace DrSwizzler.Swizzling
                         if (index2 * 8 + num9 < sx && index1 * 8 + num8 < sy)
                         {
                             int sourceIndex = sourceBytesPerPixelSet * ((index1 * 8 + num8) * sx + index2 * 8 + num9);
-                            Array.Copy(deswizzledData, sourceIndex, tempBuffer, 0, sourceBytesPerPixelSet);
-                            Array.Copy(tempBuffer, 0, outBuffer, streamPos, sourceBytesPerPixelSet);
+                            if(sourceIndex < deswizzledData.Length)
+                            {
+                                Array.Copy(deswizzledData, sourceIndex, tempBuffer, 0, sourceBytesPerPixelSet);
+                                Array.Copy(tempBuffer, 0, outBuffer, streamPos, sourceBytesPerPixelSet);
+                            }
                         }
                         streamPos += sourceBytesPerPixelSet;
                     }

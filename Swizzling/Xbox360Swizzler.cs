@@ -12,6 +12,12 @@ namespace DrSwizzler.Swizzling
     {
         public static byte[] Swizzle(byte[] data, int width, int height, int numMipMaps, DXGIFormat pixelFormat, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
         {
+            //If it's not long enough, return as is
+            if (sourceBytesPerPixelSet >= data.Length)
+            {
+                return data;
+            }
+
             DrSwizzler.Swizzling.Xbox360Deswizzler.GetXbox360Ailgn(pixelFormat, out int X360AlignX, out int X360AlignY);
             int width1 = Align(width, X360AlignX);
             int height1 = Align(height, X360AlignY);

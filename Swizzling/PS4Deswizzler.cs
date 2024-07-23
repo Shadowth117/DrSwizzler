@@ -7,7 +7,14 @@ namespace DrSwizzler.Swizzling
     {
         public static byte[] PS4Deswizzle(byte[] swizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
         {
-            byte[] outBuffer = new byte[(formatbpp * width * height) / 8];
+            //If it's not long enough, return as is
+            if(sourceBytesPerPixelSet >= swizzledData.Length)
+            {
+                return swizzledData;
+            }
+
+            int calculatedBufferSize = (formatbpp * width * height) / 8;
+            byte[] outBuffer = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
             byte[] tempBuffer = new byte[sourceBytesPerPixelSet];
             int sy = height / pixelBlockSize;
             int sx = width / pixelBlockSize;

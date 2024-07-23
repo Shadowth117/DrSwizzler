@@ -9,10 +9,17 @@ namespace DrSwizzler.Swizzling
         /// </summary>
         public static byte[] VitaDeswizzle(byte[] swizzledData, int width, int height, int sourceBytesPerPixelSet, int formatbpp)
         {
+            //If it's not long enough, return as is
+            if (sourceBytesPerPixelSet >= swizzledData.Length)
+            {
+                return swizzledData;
+            }
+
+            int calculatedBufferSize = (formatbpp * width * height) / 8;
+            byte[] unswizzledData = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
+
             int maxU = (int)(Math.Log(width, 2));
             int maxV = (int)(Math.Log(height, 2));
-
-            byte[] unswizzledData = new byte[(formatbpp * width * height) / 8];
 
             for (int j = 0; (j < width * height) && (j * sourceBytesPerPixelSet < swizzledData.Length); j++)
             {

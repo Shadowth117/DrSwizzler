@@ -7,7 +7,14 @@ namespace DrSwizzler.Swizzling
     {
         public static byte[] SwitchSwizzle(byte[] deswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
         {
-            byte[] swizzledData = new byte[(formatbpp * width * height) / 8];
+            //If it's not long enough, return as is
+            if (sourceBytesPerPixelSet >= deswizzledData.Length)
+            {
+                return deswizzledData;
+            }
+
+            int calculatedBufferSize = (formatbpp * width * height) / 8;
+            byte[] outBuffer = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
             byte[] tempBuffer = new byte[sourceBytesPerPixelSet];
             int sy = height / pixelBlockSize;
             int sx = width / pixelBlockSize;
