@@ -10,15 +10,16 @@ namespace DrSwizzler.Swizzling
             //If it's not long enough, return as is
             if (sourceBytesPerPixelSet >= deswizzledData.Length)
             {
-                return deswizzledData;
+                return ExpandArray(deswizzledData, minBufferSize);
             }
+            deswizzledData = ExpandArray(deswizzledData, minBufferSize);
 
             int calculatedBufferSize = (formatbpp * width * height) / 8;
             if (minBufferSize > calculatedBufferSize)
             {
                 calculatedBufferSize = minBufferSize;
             }
-            byte[] swizzledData = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
+            byte[] outBuffer = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
             byte[] tempBuffer = new byte[sourceBytesPerPixelSet];
             int sy = height / pixelBlockSize;
             int sx = width / pixelBlockSize;
@@ -55,7 +56,7 @@ namespace DrSwizzler.Swizzling
                                 int sourceIndex = sourceBytesPerPixelSet * (index6 * sx + index7);
 
                                 Array.Copy(deswizzledData, sourceIndex, tempBuffer, 0, sourceBytesPerPixelSet);
-                                Array.Copy(tempBuffer, 0, swizzledData, streamPos, sourceBytesPerPixelSet);
+                                Array.Copy(tempBuffer, 0, outBuffer, streamPos, sourceBytesPerPixelSet);
                                 streamPos += sourceBytesPerPixelSet;
                             }
                         }
@@ -63,7 +64,7 @@ namespace DrSwizzler.Swizzling
                 }
             }
 
-            return swizzledData;
+            return outBuffer;
         }
     }
 }

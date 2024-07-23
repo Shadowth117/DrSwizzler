@@ -279,5 +279,16 @@ namespace DrSwizzler
             width = (int)Math.Sqrt(multFactorWidth);
             height = (int)Math.Sqrt(multFactorHeight);
         }
+
+        /// <summary>
+        /// Returns new array copied into the boundaries of the new array. If the new array is smaller than the given size, return the original. 
+        /// </summary>
+        public static byte[] ExpandArray(byte[] array, int newLength)
+        {
+            byte[] newArray = new byte[newLength];
+            Array.Copy(array, 0, newArray, 0, array.Length);
+
+            return newArray;
+        }
     }
 }

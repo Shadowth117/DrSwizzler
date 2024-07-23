@@ -9,8 +9,9 @@ namespace DrSwizzler.Swizzling
             //If it's not long enough, return as is
             if (sourceBytesPerPixelSet >= deswizzledData.Length)
             {
-                return deswizzledData;
+                return Util.ExpandArray(deswizzledData, minBufferSize);
             }
+            deswizzledData = Util.ExpandArray(deswizzledData, minBufferSize); 
 
             int calculatedBufferSize = (formatbpp * width * height) / 8;
             if (minBufferSize > calculatedBufferSize)
