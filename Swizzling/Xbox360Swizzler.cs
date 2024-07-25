@@ -18,18 +18,15 @@ namespace DrSwizzler.Swizzling
                 return data;
             }
 
-            DrSwizzler.Swizzling.Xbox360Deswizzler.GetXbox360Ailgn(pixelFormat, out int X360AlignX, out int X360AlignY);
+            Xbox360Deswizzler.GetXbox360Ailgn(pixelFormat, out int X360AlignX, out int X360AlignY);
             int width1 = Align(width, X360AlignX);
             int height1 = Align(height, X360AlignY);
 
             int size = (width1 / pixelBlockSize) * (height1 / pixelBlockSize) * sourceBytesPerPixelSet;
 
             byte[] mipMapData = new byte[size];
-            Array.Copy(data, 0, mipMapData, 0, size);
-            mipMapData = TileCompressedX360Texture(mipMapData, width1, width, height1, pixelBlockSize, pixelBlockSize, sourceBytesPerPixelSet);
-            Array.Copy(mipMapData, 0, data, 0, size);
-
-            return data;
+            Array.Copy(data, 0, mipMapData, 0, Math.Min(data.Length, mipMapData.Length));
+            return TileCompressedX360Texture(mipMapData, width1, width, height1, pixelBlockSize, pixelBlockSize, sourceBytesPerPixelSet);
         }
 
         public static byte[] TileCompressedX360Texture(byte[] data, int tiledWidth, int originalWidth, int height, int blockSizeX, int blockSizeY, int bytesPerBlock)

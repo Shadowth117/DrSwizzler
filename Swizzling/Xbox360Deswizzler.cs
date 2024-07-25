@@ -65,11 +65,8 @@ namespace DrSwizzler.Swizzling
             int size = (width1 / pixelBlockSize) * (height1 / pixelBlockSize) * sourceBytesPerPixelSet;
 
             byte[] mipMapData = new byte[size];
-            Array.Copy(data, 0, mipMapData, 0, size);
-            mipMapData = UntileCompressedX360Texture(mipMapData, width1, width, height1, pixelBlockSize, pixelBlockSize, sourceBytesPerPixelSet);
-            Array.Copy(mipMapData, 0, data, 0, size);
-
-            return data;
+            Array.Copy(data, 0, mipMapData, 0, Math.Min(data.Length, mipMapData.Length));
+            return UntileCompressedX360Texture(mipMapData, width1, width, height1, pixelBlockSize, pixelBlockSize, sourceBytesPerPixelSet);
         }
 
         public static byte[] UntileCompressedX360Texture(byte[] data, int tiledWidth, int originalWidth, int height, int blockSizeX, int blockSizeY, int bytesPerBlock)
