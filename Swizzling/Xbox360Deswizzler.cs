@@ -24,7 +24,7 @@ namespace DrSwizzler.Swizzling
             return ms.ToArray();
         }
 
-        public static void GetXbox360Ailgn(DXGIFormat pixelFormat, out int X360AlignX, out int X360AlignY)
+        public static void GetXbox360Align(DXGIFormat pixelFormat, out int X360AlignX, out int X360AlignY)
         {
             X360AlignX = 0;
             X360AlignY = 0;
@@ -58,7 +58,7 @@ namespace DrSwizzler.Swizzling
                 return data;
             }
 
-            GetXbox360Ailgn(pixelFormat, out int X360AlignX, out int X360AlignY);
+            GetXbox360Align(pixelFormat, out int X360AlignX, out int X360AlignY);
             int width1 = Align(width, X360AlignX);
             int height1 = Align(height, X360AlignY);
 

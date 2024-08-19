@@ -60,7 +60,7 @@ namespace DrSwizzler.Swizzling
                 }
             }
 
-            return tempBuffer;
+            return outBuffer;
         }
     }
 }
