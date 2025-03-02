@@ -120,6 +120,7 @@
             P8 = 113,
             A8P8 = 114,
             B4G4R4A4UNORM = 115,
+            A4B4G4R4UNORM = 191,
             FORCEUINT = 0xffffffff
         }
     }
