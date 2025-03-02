@@ -226,8 +226,6 @@ namespace DrSwizzler
               31
         };
 
-        
-
         /// <summary>
         /// Based on RawTex handling
         /// </summary>
@@ -253,7 +251,6 @@ namespace DrSwizzler
                 sourceBytesPerPixelSet = formatBpp * 2;
             }
         }
-
 
         /// <summary>
         /// RawTex Implementation
