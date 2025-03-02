@@ -34,16 +34,43 @@ namespace DrSwizzler.Swizzling
                     X360AlignX = 0;
                     X360AlignY = 0;
                     break;
+                case DXGIFormat.A8UNORM:
+                case DXGIFormat.R8TYPELESS:
+                case DXGIFormat.R8UNORM:
+                case DXGIFormat.R8SNORM:
+                case DXGIFormat.R8UINT:
+                case DXGIFormat.R8SINT:
+                    X360AlignX = 64;
+                    X360AlignY = 64;
+                    break;
+                case DXGIFormat.R8G8TYPELESS:
+                case DXGIFormat.R8G8UNORM:
+                case DXGIFormat.R8G8SNORM:
+                case DXGIFormat.R8G8UINT:
+                    X360AlignX = 64;
+                    X360AlignY = 32;
+                    break;
+                case DXGIFormat.R8G8B8A8TYPELESS:
                 case DXGIFormat.R8G8B8A8UNORM:
+                case DXGIFormat.R8G8B8A8UNORMSRGB:
+                case DXGIFormat.R8G8B8A8SNORM:
+                case DXGIFormat.R8G8B8A8UINT:
+                case DXGIFormat.R8G8B8A8SINT:
+                case DXGIFormat.B8G8R8A8TYPELESS:
                 case DXGIFormat.B8G8R8A8UNORM:
+                case DXGIFormat.B8G8R8A8UNORMSRGB:
                     X360AlignX = 32;
                     X360AlignY = 32;
                     break;
+                case DXGIFormat.BC1TYPELESS:
                 case DXGIFormat.BC1UNORM:
+                case DXGIFormat.BC1UNORMSRGB:
+                case DXGIFormat.BC2TYPELESS:
                 case DXGIFormat.BC2UNORM:
+                case DXGIFormat.BC2UNORMSRGB:
+                case DXGIFormat.BC3TYPELESS:
                 case DXGIFormat.BC3UNORM:
-                case DXGIFormat.BC4UNORM:
-                case DXGIFormat.BC5UNORM:
+                case DXGIFormat.BC3UNORMSRGB:
                     X360AlignX = 128;
                     X360AlignY = 128;
                     break;
