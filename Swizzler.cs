@@ -12,15 +12,15 @@ namespace DrSwizzler
         public static byte[] VitaSwizzle(byte[] swizzledData, int width, int height, DXGIFormat pixelFormat, int minBufferSize = 0x0)
         {
             GetsourceBytesPerPixelSetAndPixelSize(pixelFormat, out var sourceBytesPerPixelSet, out var pixelBlockSize, out int formatbpp);
-            return VitaSwizzle(swizzledData, width, height, sourceBytesPerPixelSet, formatbpp, minBufferSize);
+            return VitaSwizzle(swizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, formatbpp, minBufferSize);
         }
 
         /// <summary>
         /// Massive credit to Agrajag for Vita Deswizzling
         /// </summary>
-        public static byte[] VitaSwizzle(byte[] swizzledData, int width, int height, int sourceBytesPerPixelSet, int formatbpp, int minBufferSize = 0x0)
+        public static byte[] VitaSwizzle(byte[] swizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp, int minBufferSize = 0x0)
         {
-            return VitaSwizzler.VitaSwizzle(swizzledData, width, height, sourceBytesPerPixelSet, formatbpp, minBufferSize);
+            return VitaSwizzler.VitaSwizzle(swizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, formatbpp, minBufferSize);
         }
 
         public static byte[] Xbox360Swizzle(byte[] swizzledData, int width, int height, DXGIFormat pixelFormat)

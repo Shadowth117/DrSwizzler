@@ -4,7 +4,7 @@ namespace DrSwizzler.Swizzling
 {
     internal class VitaSwizzler
     {
-        public static byte[] VitaSwizzle(byte[] deswizzledData, int width, int height, int sourceBytesPerPixelSet, int formatbpp, int minBufferSize = 0)
+        public static byte[] VitaSwizzle(byte[] deswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp, int minBufferSize = 0)
         {
             //If it's not long enough, return as is
             if (sourceBytesPerPixelSet >= deswizzledData.Length)
@@ -19,6 +19,8 @@ namespace DrSwizzler.Swizzling
                 calculatedBufferSize = minBufferSize;
             }
             byte[] swizzledData = new byte[calculatedBufferSize > sourceBytesPerPixelSet ? calculatedBufferSize : sourceBytesPerPixelSet];
+            width /= pixelBlockSize;
+            height /= pixelBlockSize;
 
             int maxU = (int)(Math.Log(width, 2));
             int maxV = (int)(Math.Log(height, 2));
