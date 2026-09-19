@@ -63,17 +63,34 @@ namespace DrSwizzler
         }
 
         /// <summary>
-        /// RawTex Implementation
+        /// PS5's AMD Gen 5 Deswizzle, redone based on KytyPS5's tile.cpp. Handles tile modes 0, 1, 5, and 9 with 9 most common. 
+        /// Volume textures have slices swizzled together and so depth was added as a variable to handle that. Depth is ONLY for
+        /// volume textures and should not be used for cubemaps or multi slice standard textures, which should instead be sent in separate buffers.
+        /// Also accounts now for larger bits per pixel pixel formats instead of failing on 64+ due to different hardware handling
         /// </summary>
-        public static byte[] PS5Deswizzle(byte[] swizzledData, int width, int height, DXGIFormat pixelFormat)
+        public static byte[] PS5Deswizzle(byte[] swizzledData, int width, int height, DXGIFormat pixelFormat, int volumeTexDepth = 1, int tileMode = 9)
         {
+            if(tileMode == 0)
+            {
+                return swizzledData;
+            }
             GetsourceBytesPerPixelSetAndPixelSize(pixelFormat, out var sourceBytesPerPixelSet, out var pixelBlockSize, out int formatbpp);
-            return PS5Deswizzle(swizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, formatbpp);
+            return PS5Deswizzle(swizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, volumeTexDepth, tileMode);
         }
 
-        public static byte[] PS5Deswizzle(byte[] swizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp)
+        /// <summary>
+        /// PS5's AMD Gen 5 Deswizzle, redone based on KytyPS5's tile.cpp. Handles tile modes 0, 1, 5, and 9 with 9 most common. 
+        /// Volume textures have slices swizzled together and so depth was added as a variable to handle that. Depth is ONLY for
+        /// volume textures and should not be used for cubemaps or multi slice standard textures, which should instead be sent in separate buffers.
+        /// Also accounts now for larger bits per pixel pixel formats instead of failing on 64+ due to different hardware handling
+        /// </summary>
+        public static byte[] PS5Deswizzle(byte[] swizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int volumeTexDepth = 1, int tileMode = 9)
         {
-            return PS5Deswizzler.PS5Deswizzle(swizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, formatbpp);
+            if (tileMode == 0)
+            {
+                return swizzledData;
+            }
+            return PS5Deswizzler.PS5Deswizzle(swizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, volumeTexDepth, tileMode);
         }
 
         /// <summary>
