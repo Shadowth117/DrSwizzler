@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using static DrSwizzler.Swizzling.PS5Common;
 
 namespace DrSwizzler.Swizzling
@@ -9,7 +10,8 @@ namespace DrSwizzler.Swizzling
         {
             if ((sourceBytesPerPixelSet & (sourceBytesPerPixelSet - 1)) != 0 || sourceBytesPerPixelSet < 1 || sourceBytesPerPixelSet > 16)
             {
-                throw new Exception($"Unsupported element size {sourceBytesPerPixelSet}!");
+                Debug.WriteLine($"Unsupported element size {sourceBytesPerPixelSet}!");
+                return tiledData;
             }
             int bpeIndex = 0;
             while ((1 << bpeIndex) < sourceBytesPerPixelSet)
@@ -28,11 +30,6 @@ namespace DrSwizzler.Swizzling
             int blocksPerRow = paddedWidth / blockWidth;
             int blocksPerColumn = paddedHeight / blockHeight;
             long blockSliceSize = (long)blockDepth * paddedWidth * paddedHeight * sourceBytesPerPixelSet;
-            long totalSize = blockSliceSize * blockSliceCount;
-            if (tiledData.Length < totalSize)
-            {
-                throw new Exception($"Tiled buffer too small! Expected at least {totalSize} bytes, got {tiledData.Length}.");
-            }
 
             byte[] output = new byte[(long)Math.Max(depth, 1) * elemWidth * elemHeight * sourceBytesPerPixelSet];
             long sliceOutputSize = (long)elemWidth * elemHeight * sourceBytesPerPixelSet;
@@ -95,6 +92,10 @@ namespace DrSwizzler.Swizzling
                         long block = blockX + (long)blocksPerRow * blockY;
                         long src = blockSliceBase + block * blockSize + offsetInBlock;
                         long dst = outRow + (long)x * sourceBytesPerPixelSet;
+                        if (src + sourceBytesPerPixelSet > tiledData.Length || dst + sourceBytesPerPixelSet > output.Length)
+                        {
+                            return output;
+                        }
                         for (int b = 0; b < sourceBytesPerPixelSet; b++)
                         {
                             output[dst + b] = tiledData[src + b];

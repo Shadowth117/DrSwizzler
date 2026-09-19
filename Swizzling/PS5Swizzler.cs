@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Diagnostics;
 using static DrSwizzler.Swizzling.PS5Common;
 
 namespace DrSwizzler.Swizzling
 {
     internal class PS5Swizzler
     {
-        public static byte[] PS5Swizzle(byte[] linearData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int depth = 1, int tileMode = 9)
+        public static byte[] PS5Swizzle(byte[] unswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int depth = 1, int tileMode = 9)
         {
             if ((sourceBytesPerPixelSet & (sourceBytesPerPixelSet - 1)) != 0 || sourceBytesPerPixelSet < 1 || sourceBytesPerPixelSet > 16)
             {
-                throw new Exception($"Unsupported element size {sourceBytesPerPixelSet}!");
+                Debug.WriteLine($"Unsupported element size {sourceBytesPerPixelSet}!");
+                return unswizzledData;
             }
             PS5BlockLayout(sourceBytesPerPixelSet, tileMode, depth > 1, out int blockWidth, out int blockHeight, out int blockDepth, out int blockSize);
 
@@ -17,10 +19,7 @@ namespace DrSwizzler.Swizzling
             int elemWidth = (width + pixelBlockSize - 1) / pixelBlockSize;
             int elemHeight = (height + pixelBlockSize - 1) / pixelBlockSize;
             int elemDepth = depth > 1 ? depth : 1;
-            if (linearData.Length < (long)elemDepth * elemWidth * elemHeight * sourceBytesPerPixelSet)
-            {
-                throw new Exception("Linear data smaller than width x height x depth!");
-            }
+
             int paddedWidth = (elemWidth + blockWidth - 1) / blockWidth * blockWidth;
             int paddedHeight = (elemHeight + blockHeight - 1) / blockHeight * blockHeight;
             int blocksPerRow = paddedWidth / blockWidth;
@@ -90,9 +89,13 @@ namespace DrSwizzler.Swizzling
                         long block = blockX + (long)blocksPerRow * blockY;
                         long dst = blockSliceBase + block * blockSize + offsetInBlock;
                         long src = inRow + (long)x * sourceBytesPerPixelSet;
+                        if (src + sourceBytesPerPixelSet > unswizzledData.Length || dst + sourceBytesPerPixelSet > output.Length)
+                        {
+                            return output;
+                        }
                         for (int b = 0; b < sourceBytesPerPixelSet; b++)
                         {
-                            output[dst + b] = linearData[src + b];
+                            output[dst + b] = unswizzledData[src + b];
                         }
                     }
                 }

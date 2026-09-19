@@ -5,11 +5,11 @@
     <Authors>Shadowth117</Authors>
     <Description>A library for deswizzling and swizzling texture data for various game consoles.</Description>
     <PackageProjectUrl>https://github.com/Shadowth117/DrSwizzler</PackageProjectUrl>
-    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <AssemblyVersion>1.2.1</AssemblyVersion>
     <Version>$(AssemblyVersion)</Version>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-		<None Include="README.md" Pack="true" PackagePath="\"/>
+		<None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
