@@ -1,3 +1,6 @@
+Version 1.3.0
+-ASTC format support for the Switch family
+
 Version 1.2.1
 -Made failure states return current data instead of outright failing and more lenient. This lets some cases that used to work with the old methods still succeed
 

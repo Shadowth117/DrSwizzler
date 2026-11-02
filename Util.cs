@@ -227,6 +227,92 @@ namespace DrSwizzler
         };
 
         /// <summary>
+        /// Switch 2 variation of the Switch Texture Info
+        /// </summary>
+        public static int[] swi2 = new int[32]
+        {
+              0,
+              4,
+              8,
+              12,
+              1,
+              5,
+              9,
+              13,
+              16,
+              20,
+              24,
+              28,
+              17,
+              21,
+              25,
+              29,
+              2,
+              6,
+              10,
+              14,
+              3,
+              7,
+              11,
+              15,
+              18,
+              22,
+              26,
+              30,
+              19,
+              23,
+              27,
+              31
+        };
+
+        /// <summary>
+        /// ASTC pixelBlock width and height data. Intended to be derived by (dxgiFormat - ASTC_4X4_UNORM) / 4. 
+        /// </summary>
+        public static readonly (int width, int height)[] astcFootprints =
+{
+            (4, 4), 
+            (5, 4), 
+            (5, 5), 
+            (6, 5), 
+            (6, 6), 
+            (8, 5), 
+            (8, 6),
+            (8, 8), 
+            (10, 5), 
+            (10, 6), 
+            (10, 8), 
+            (10, 10), 
+            (12, 10), 
+            (12, 12),
+        };
+
+        /// <summary>
+        /// Extended GetsourceBytesPerPixelSetAndPixelSize for use with ASTC formats (e.g. Switch, Switch 2)
+        /// </summary>
+        public static void GetsourceBytesPerPixelSetAndPixelSizeExtended(DXGIFormat dxgiFormat, out int sourceBytesPerPixel, out int pixelBlockWidth, out int pixelBlockHeight, out int formatBpp)
+        {
+            formatBpp = 0;
+
+            uint astcIndex = dxgiFormat - DXGIFormat.ASTC_4X4_UNORM;
+            if (astcIndex >= 0 && astcIndex < astcFootprints.Length * 4)
+            {
+                sourceBytesPerPixel = 16;
+                (pixelBlockWidth, pixelBlockHeight) = astcFootprints[astcIndex / 4];
+                return;
+            }
+
+            //Fall back to standard DDS formats
+            var fmt = (DrSwizzler.DDS.DXEnums.DXGIFormat)dxgiFormat;
+            DrSwizzler.Util.GetsourceBytesPerPixelSetAndPixelSize(fmt, out int sbpps, out int pbs, out int bpp);
+
+            sourceBytesPerPixel = sbpps;
+            pixelBlockWidth = pbs;
+            pixelBlockHeight = pbs;
+            formatBpp = bpp;
+            return;
+        }
+
+        /// <summary>
         /// Based on RawTex handling
         /// </summary>
         public static void GetsourceBytesPerPixelSetAndPixelSize(DXGIFormat pixelFormat, out int sourceBytesPerPixelSet, out int pixelBlockSize, out int formatBpp)
@@ -313,6 +399,26 @@ namespace DrSwizzler
             }
 
             return tileBuffer;
+        }
+
+        /// <summary>
+        /// Grabs a tile from an array of pixels based on ASTC format footprint dimensions
+        /// </summary>
+        public static byte[] ExtractTileASTC(byte[] texBuffer, int pixelSetSize, int footprintW, int footprintH, int bufferWidth, int tileWidth, int tileHeight)
+        {
+            int paddedBlocksX = bufferWidth / footprintW;
+            int blocksX = (tileWidth + footprintW - 1) / footprintW;
+            int blocksY = (tileHeight + footprintH - 1) / footprintH;
+            byte[] output = new byte[(long)blocksX * blocksY * pixelSetSize];
+
+            for (int y = 0; y < blocksY; y++)
+            {
+                long src = (long)y * paddedBlocksX * pixelSetSize;
+                long dst = (long)y * blocksX * pixelSetSize;
+                Array.Copy(texBuffer, src, output, dst, (long)blocksX * pixelSetSize);
+            }
+
+            return output;
         }
 
         /// <summary>

@@ -94,17 +94,55 @@ namespace DrSwizzler
         }
 
         /// <summary>
-        /// Based on RawTex Implementation
+        /// Adjusted RawTex implentation.
+        /// This now routes for ASTC as well.
         /// </summary>
         public static byte[] SwitchSwizzle(byte[] unswizzledData, int width, int height, DXGIFormat pixelFormat, int minBufferSize = 0x0)
         {
-            GetsourceBytesPerPixelSetAndPixelSize(pixelFormat, out var sourceBytesPerPixelSet, out var pixelBlockSize, out int formatbpp);
-            return SwitchSwizzle(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, formatbpp, minBufferSize);
+            GetsourceBytesPerPixelSetAndPixelSizeExtended(pixelFormat, out var sourceBytesPerPixelSet, out var pixelBlockWidth, out int pixelBlockHeight, out int formatbpp);
+            return SwitchSwizzleASTC(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockWidth, pixelBlockHeight, minBufferSize);
         }
 
+        /// <summary>
+        /// Only for legacy support. Handles non ASTC pixelformats via the new pathway
+        /// </summary>
         public static byte[] SwitchSwizzle(byte[] unswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp, int minBufferSize = 0x0)
         {
-            return SwitchSwizzler.SwitchSwizzle(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, formatbpp, minBufferSize);
+            return SwitchSwizzler.SwitchSwizzle(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, pixelBlockSize, swi, minBufferSize);
+        }
+
+        /// <summary>
+        /// Adjusted RawTex implentation with ASTC support.
+        /// </summary>
+        public static byte[] SwitchSwizzleASTC(byte[] unswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockWidth, int pixelBlockHeight, int minBufferSize = 0x0)
+        {
+            return SwitchSwizzler.SwitchSwizzle(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockWidth, pixelBlockHeight, swi, minBufferSize);
+        }
+
+        /// <summary>
+        /// Adjusted RawTex implentation.
+        /// This routes for ASTC as well.
+        /// </summary>
+        public static byte[] Switch2Swizzle(byte[] unswizzledData, int width, int height, DXGIFormat pixelFormat, int minBufferSize = 0x0)
+        {
+            GetsourceBytesPerPixelSetAndPixelSizeExtended(pixelFormat, out var sourceBytesPerPixelSet, out var pixelBlockWidth, out int pixelBlockHeight, out int formatbpp);
+            return Switch2SwizzleASTC(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockWidth, pixelBlockHeight, minBufferSize);
+        }
+
+        /// <summary>
+        /// Only for legacy support. Handles non ASTC pixelformats via the new pathway
+        /// </summary>
+        public static byte[] Switch2Swizzle(byte[] unswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockSize, int formatbpp, int minBufferSize = 0x0)
+        {
+            return SwitchSwizzler.SwitchSwizzle(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockSize, pixelBlockSize, swi2, minBufferSize);
+        }
+
+        /// <summary>
+        /// Adjusted RawTex implentation with ASTC support.
+        /// </summary>
+        public static byte[] Switch2SwizzleASTC(byte[] unswizzledData, int width, int height, int sourceBytesPerPixelSet, int pixelBlockWidth, int pixelBlockHeight, int minBufferSize = 0x0)
+        {
+            return SwitchSwizzler.SwitchSwizzle(unswizzledData, width, height, sourceBytesPerPixelSet, pixelBlockWidth, pixelBlockHeight, swi2, minBufferSize);
         }
     }
 }
